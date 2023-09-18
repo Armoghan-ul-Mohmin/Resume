@@ -11,6 +11,7 @@ const stripCssComments = require('gulp-strip-css-comments');
 const stripComments = require('gulp-strip-comments');
 const uglify = require('gulp-uglify');
 const browserSync = require('browser-sync').create();
+const sitemap = require('gulp-sitemap');
 
 // Compile SCSS to CSS with autoprefixer, clean CSS, and sourcemaps
 
@@ -86,10 +87,22 @@ function watch() {
     gulp.watch('./src/assets/images/**/*').on('change', gulp.series(copyImages, browserSync.reload)); // Copy images and reload on change
 }
 
+// Task to generate a sitemap for SEO
+function generateSitemap() {
+    return gulp.src('public/**/*.html', {
+        read: false
+    })
+        .pipe(sitemap({
+            siteUrl: 'https://armoghan.netlify.app/'
+        }))
+        .pipe(gulp.dest('./public'));
+}
+
 exports.style = style;
 exports.copyHTML = copyHTML;
 exports.copyJS = copyJS;
 exports.copyImages = copyImages;
 exports.copyIcons = copyIcons;
 exports.purgeCss = purgeCss;
+exports.sitemap = generateSitemap;
 exports.watch = watch;
